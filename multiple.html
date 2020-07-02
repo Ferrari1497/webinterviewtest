@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+  <title>ウェブ面接画面</title>
+
+  <style>
+    * {
+    margin:0; padding:0;
+    }
+    header {
+    height: 40px;
+    width: 100%;
+    padding: 15px 0;
+    background-color: #337079;
+    color: white;
+    }
+    header .headline{
+        line-height: 50px;
+        float: left;
+        font-size: 30px;
+        margin-left: 100px;
+    }
+    .nav-list {
+        line-height: 100px;
+        float: left;
+        margin-left: 30px;
+        list-style: none;
+    }
+    .nav-list-item {
+    list-style: none;
+    display: inline-block;
+    margin: 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+  	<h1 class="headline">
+      <a>ウェブ面接画面</a>
+    </h1>
+  </header>
+    <div id="js-videos-container" class="videos-container">
+        <video id="js-local-video" autoplay muted="true"></video>
+    </div>
+    <div class="controller-container">
+        <p>Your room key: <span id="js-local-id">...</span></p>
+        Enter room key:
+        <input type="text" placeholder="Join room..." id="js-room-id">
+        <button id="js-join-trigger">Join</button>
+        <button id="js-leave-trigger">Leave</button>
+        <pre class="messages" id="js-messages"></pre>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+    <script type="text/javascript" src="../shared/key.js"></script>
+    <script type="text/javascript" src="./script.js"></script>
+</body>
+</html>

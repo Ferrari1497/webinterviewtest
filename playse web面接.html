@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)https://meet.playse.jp/manage/contract -->
+<html lang="ja"><script type="text/javascript" async="" src="./playse web面接_files/analytics.js.ダウンロード"></script><script async="" src="./playse web面接_files/gtm.js.ダウンロード"></script><script type="text/javascript" class="__REQUESTLY__SCRIPT">(function(namespace) {
+  window[namespace] = window[namespace] || {};
+  window[namespace].responseRules = {};
+
+  let open = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(method) {
+    this.addEventListener('readystatechange', function() {
+      if (this.readyState === 4 && window[namespace].responseRules.hasOwnProperty(this.responseURL)) {
+        const responseRule = window[namespace].responseRules[this.responseURL];
+        const {response, id} = responseRule;
+        const responseType = this.responseType;
+        let customResponse;
+
+        customResponse = response.type === 'code' ? responseRule.evaluator({
+            method,
+            url: this.responseURL,
+            requestHeaders: this.requestHeaders,
+            requestData: this.requestData,
+            responseType: this.responseType,
+            response: this.response
+          }) : response.value;
+
+        Object.defineProperty(this, 'response', {
+          get: function () {
+            if (response.type === 'static' && responseType === 'json') {
+              return JSON.parse(customResponse);
+            }
+            return customResponse;
+          }
+        });
+
+        if (responseType === '' || responseType === 'text') {
+          Object.defineProperty(this, 'responseText', {
+            get: function () {
+              return customResponse;
+            }
+          });
+        }
+
+        window.postMessage({
+          from: 'requestly',
+          type: 'response_rule_applied',
+          id
+        }, window.location.href);
+      }
+    }, false);
+    open.apply(this, arguments);
+  };
+
+  let send = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.send = function(data) {
+    this.requestData = data;
+    send.apply(this, arguments);
+  };
+
+  let setRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
+  XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
+    this.requestHeaders = this.requestHeaders || {};
+    this.requestHeaders[header] = value;
+    setRequestHeader.apply(this, arguments);
+  }
+})('__REQUESTLY__')
+</script>
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=1280">
+		<title>playse web面接</title>
+		<!-- Google Tag Manager -->
+		<script>
+				(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-M42RNLW');
+		</script>
+		<!-- End Google Tag Manager -->
+		<link rel="stylesheet" href="./playse web面接_files/styles.css">
+		<link rel="shortcut icon" href="https://meet.playse.jp/favicon.ico" type="image/x-icon">
+		<link rel="apple-touch-icon" href="https://meet.playse.jp/apple-touch-icon.png">
+</head>
+<body>
+		<!-- Google Tag Manager (noscript) --><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M42RNLW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<!-- End Google Tag Manager (noscript) -->
+		<div id="overlay" class="overlay"></div>
+		<div id="container" class="container">
+				<header class="header">
+						<!-- <div class="header__logo">株式会社アルバイトタイムス</div> -->
+						<div class="header__account">
+								<!-- <div class="header__account__image"><img src="./playse web面接_files/default_profile_image.png" alt=""></div> -->
+								<div class="header__account__name"><a href="https://meet.playse.jp/manage/account">閉じる</a></div>
+						</div>
+				</header>
+				<main class="main">
+						<!-- <div class="page-header">
+								<h1 class="title title--primary"><i class="icon icon-setting"></i>設定</h1>
+						</div> -->
+						<!-- <section class="section">
+								<div class="section__header">
+										<h2 class="title title--secondary">契約情報</h2>
+								</div>
+								<div class="section__wrapper section__wrapper--form">
+										<table class="table table--detail mb--32">
+												<caption class="table__caption">現在の契約プラン</caption>
+												<tbody>
+														<tr class="table__tr">
+																<th class="table__th">契約プラン</th>
+																<td class="table__td">トライアル</td>
+														</tr>
+														<tr class="table__tr">
+																<th class="table__th">利用開始日</th>
+																<td class="table__td">2020/06/02 〜 2020/07/31まで<span class="text text--warning">（残-5日）</span></td>
+														</tr>
+												</tbody>
+										</table>
+										<table id="usage" class="table table--detail mb--32">
+												<caption class="table__caption">
+														<ul class="list">
+																<li class="list__item">ご利用状況（2020年08月）</li>
+																<li class="list__item"><button class="btn btn--icon-only"><i class="icon icon-arrow-left"></i></button></li>
+																<li class="list__item"><button class="btn btn--icon-only"><i class="icon icon-arrow-right"></i></button></li>
+														</ul>
+												</caption>
+												<tbody>
+														<tr class="table__tr">
+																<th class="table__th">ユーザー数<br>（管理者・担当者）</th>
+																<td class="table__td">1人</td>
+														</tr>
+														<tr class="table__tr">
+																<th class="table__th">応募者数・月間</th>
+																<td class="table__td">0人</td>
+														</tr>
+														<tr class="table__tr">
+																<th class="table__th">面接時間</th>
+																<td class="table__td">0分</td>
+														</tr>
+												</tbody>
+										</table>
+										<table class="table table--detail mb--8">
+												<caption class="table__caption">今月のご利用料金（目安）</caption>
+												<tbody>
+														<tr class="table__tr">
+																<th class="table__th"></th>
+																<td class="table__td">スタータープラン</td>
+																<td class="table__td">ベーシックプラン</td>
+														</tr>
+														<tr class="table__tr">
+																<th class="table__th">基本料</th>
+																<td class="table__td">14,800円（税別）</td>
+																<td class="table__td">19,800円（税別）</td>
+														</tr>
+														<tr class="table__tr">
+																<th class="table__th">利用料</th>
+																<td class="table__td">0円（税別）</td>
+																<td class="table__td">0円（税別）</td>
+														</tr>
+														<tr class="table__tr">
+																<th class="table__th">合計</th>
+																<td class="table__td">14,800円（税別）</td>
+																<td class="table__td">19,800円（税別）</td>
+														</tr>
+												</tbody>
+										</table>
+										<p class="text mb--32">※ 利用料は、ご契約プランとご利用数に応じて変動します。（<a href="https://meet.playse.jp/assets/pricelist.pdf" target="_blank">月額料金早見表</a>）<br>※ 正確なご利用料金は、翌月に発行される請求書でご確認ください。請求書は「ご請求先情報」で設定されたご担当者宛にEメールにて送付いたします。<br>※ トライアル中は料金が発生することはありません。ご契約いただく際の目安としてください。</p>
+										<div class="actions actions--block">
+												<ul class="actions__items">
+														<li class="actions__item"><a href="https://meet.playse.jp/manage/contract/subscribe" class="btn btn--primary">契約プラン変更のお申し込み</a></li>
+												</ul>
+										</div>
+								</div>
+						</section> -->
+						<!-- <footer class="footer">
+								<ul class="footer__items">
+										<li class="footer__item"><a href="https://playse.jp/meet/terms" target="_blank">利用規約</a></li>
+										<li class="footer__item"><a href="https://manebi.co.jp/privacy-policy/" target="_blank">プライバシーポリシー</a></li>
+										<li class="footer__item"><a href="https://manebi.co.jp/" target="_blank">運営会社</a></li>
+								</ul>
+								<p class="footer__copyright">© 2020 manebi inc. All rights reserved.</p>
+						</footer> -->
+				</main>
+				<!-- <aside class="sidebar">
+						<div class="sidebar__logo"><a href="https://meet.playse.jp/dashboard">playse web面接</a></div>
+						<nav class="sidebar__nav">
+								<ul id="sidebarNavItems" class="sidebar__nav__items">
+										<li class="sidebar__nav__item"><a href="https://meet.playse.jp/dashboard"><i class="icon icon-dashboard"></i><span>ダッシュボード</span></a></li>
+										<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/applicant"><i class="icon icon-applicant"></i><span>応募者</span></a></li>
+										<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/interview"><i class="icon icon-interview"></i><span>面接</span></a></li>
+										<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/page"><i class="icon icon-page"></i><span>ページ</span></a></li>
+										<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/report"><i class="icon icon-report"></i><span>レポート</span></a></li>
+										<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/login/history"><i class="icon icon-clock"></i><span>ログイン履歴</span></a></li>
+										<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/user"><i class="icon icon-users"></i><span>ユーザー</span></a></li>
+										<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/account"><i class="icon icon-account"></i><span>個人設定</span></a></li>
+										<li class="sidebar__nav__item sidebar__nav__item--active"><a href="https://meet.playse.jp/manage/contract#" id="toggleSetting"><i class="icon icon-setting"></i><span class="sidebar__nav__item__toggle">設定</span></a>
+												<ul class="sidebar__nav__items">
+														<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/entry">エントリーシート</a></li>
+														<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/survey">ヒアリングシート</a></li>
+														<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/evaluation">評価シート</a></li>
+														<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/mail">メールテンプレート</a></li>
+														<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/agreement">同意事項</a></li>
+														<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/client">登録情報</a></li>
+														<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/contract">契約情報</a></li>
+												</ul>
+										</li>
+										<li class="sidebar__nav__item sidebar__nav__item--folding"><a href="https://meet.playse.jp/manage/contract#" id="toggleSidebar"><i></i><span>メニューを閉じる</span></a></li>
+										<li class="sidebar__nav__item"><a href="https://playse.jp/meet/help" target="_blank"><i class="icon icon-tooltip"></i><span>ヘルプ</span></a></li>
+										<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/contact"><i class="icon icon-email"></i><span>お問い合わせ</span></a></li>
+										<li class="sidebar__nav__item"><a href="https://meet.playse.jp/manage/logout"><i class="icon icon-logout"></i><span>ログアウト</span></a></li>
+								</ul>
+						</nav>
+				</aside> -->
+		</div>
+		<script src="./playse web面接_files/jquery.min.js.ダウンロード"></script>
+		<script src="./playse web面接_files/playse.js.ダウンロード"></script>
+		<script src="./playse web面接_files/playse.invite.js.ダウンロード"></script>
+		<script>
+				window.onload = function() {Playse.init();};
+		</script>
+		<script src="./playse web面接_files/vue@2.6.0"></script>
+		<script>
+				const app = new Vue({el: '#usage', data: {current: '2020年08月', prev: '2020-07', next: '2020-09', user_count: '1', applicant_count: '0', room_usage: '0', }, methods: {prevMonth: async function() {fetch('/manage/api/getClientUsage', {method: 'POST', body: new URLSearchParams(`month=${this.prev}`)}).then(res => res.json()).then(res => {this.current = res.current;this.prev = res.prev;this.next = res.next;this.user_count = res.user_count;this.applicant_count = res.applicant_count;this.room_usage = res.room_usage;});}, nextMonth: async function() {fetch('/manage/api/getClientUsage', {method: 'POST', body: new URLSearchParams(`month=${this.next}`)}).then(res => res.json()).then(res => {this.current = res.current;this.prev = res.prev;this.next = res.next;this.user_count = res.user_count;this.applicant_count = res.applicant_count;this.room_usage = res.room_usage;});}}});
+		</script>
+</body>
+</html>

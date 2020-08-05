@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)https://meet.playse.jp/manage/login/9pjlz -->
+<html lang="ja"><script type="text/javascript" async="" src="./playse web面接ログイン_files/analytics.js.ダウンロード"></script><script async="" src="./playse web面接ログイン_files/gtm.js.ダウンロード"></script><script type="text/javascript" class="__REQUESTLY__SCRIPT">(function(namespace) {
+  window[namespace] = window[namespace] || {};
+  window[namespace].responseRules = {};
+
+  let open = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(method) {
+    this.addEventListener('readystatechange', function() {
+      if (this.readyState === 4 && window[namespace].responseRules.hasOwnProperty(this.responseURL)) {
+        const responseRule = window[namespace].responseRules[this.responseURL];
+        const {response, id} = responseRule;
+        const responseType = this.responseType;
+        let customResponse;
+
+        customResponse = response.type === 'code' ? responseRule.evaluator({
+            method,
+            url: this.responseURL,
+            requestHeaders: this.requestHeaders,
+            requestData: this.requestData,
+            responseType: this.responseType,
+            response: this.response
+          }) : response.value;
+
+        Object.defineProperty(this, 'response', {
+          get: function () {
+            if (response.type === 'static' && responseType === 'json') {
+              return JSON.parse(customResponse);
+            }
+            return customResponse;
+          }
+        });
+
+        if (responseType === '' || responseType === 'text') {
+          Object.defineProperty(this, 'responseText', {
+            get: function () {
+              return customResponse;
+            }
+          });
+        }
+
+        window.postMessage({
+          from: 'requestly',
+          type: 'response_rule_applied',
+          id
+        }, window.location.href);
+      }
+    }, false);
+    open.apply(this, arguments);
+  };
+
+  let send = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.send = function(data) {
+    this.requestData = data;
+    send.apply(this, arguments);
+  };
+
+  let setRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
+  XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
+    this.requestHeaders = this.requestHeaders || {};
+    this.requestHeaders[header] = value;
+    setRequestHeader.apply(this, arguments);
+  }
+})('__REQUESTLY__')
+</script>
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<meta name="robots" content="noindex">
+		<title>playse web面接</title>
+		<!-- Google Tag Manager -->
+		<script>
+				(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-M42RNLW');
+		</script>
+		<!-- End Google Tag Manager -->
+		<link rel="stylesheet" href="./playse web面接ログイン_files/styles.css">
+		<link rel="shortcut icon" href="https://meet.playse.jp/favicon.ico" type="image/x-icon">
+		<link rel="apple-touch-icon" href="https://meet.playse.jp/apple-touch-icon.png">
+</head>
+<body>
+		<!-- Google Tag Manager (noscript) --><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M42RNLW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<!-- End Google Tag Manager (noscript) -->
+		<main class="main">
+				<div class="panel panel--login">
+						<section class="section">
+								<div class="section__logo">
+                  <!-- <img src="./playse web面接ログイン_files/panel_logo.png" alt="playse web面接"> -->
+                   	<h1>
+                      <a>ウェブ面接ログイン画面</a>
+                    </h1>
+                </div>
+								<form id="submitForm" method="post" action="https://meet.playse.jp/manage/login/9pjlz"><input type="hidden" name="params[csrf_token]" value="8e2e95f6f2cf552cad0e1f1c767c0f62"><input type="hidden" name="params[ref]" value="">
+										<dl class="dl dl--form mb--36"><dt class="dl__dt">メールアドレス</dt>
+                        <dd class="dl__dd"><input type="email" name="params[email]" class="input" value="" autocomplete="email" placeholder="メールアドレス" autofocus="" required=""> </dd> 
+                        <!-- <dt class="dl__dt">パスワード</dt> -->
+												<!-- <dd class="dl__dd"><input type="password" name="params[password]" class="input" placeholder="パスワード" autocomplete="current-password" required=""></dd> -->
+										</dl>
+										<div class="actions">
+												<ul class="actions__items">
+														<li class="actions__item"><button id="submitButton" type="submit" class="btn btn--primary btn--block">ログイン</button></li>
+												</ul>
+										</div>
+                </form>
+                <br>
+                <p style="color:red;">※面接予定時間〇〇分前からのみログインできます</p>
+								<div class="actions actions--bottom">
+										<!-- <ul class="actions__items">
+												<li class="actions__item"><a href="https://meet.playse.jp/manage/forgotpassword/verify/9pjlz">パスワードを忘れた方はこちら</a></li>
+										</ul> -->
+								</div>
+						</section>
+						<!-- <footer class="footer">
+								<ul class="footer__items">
+										<li class="footer__item"><img src="./playse web面接ログイン_files/footer_logo.png" alt="playse"></li>
+										<li class="footer__item"><a href="https://playse.jp/meet/terms" target="_blank">利用規約</a></li>
+										<li class="footer__item"><a href="https://manebi.co.jp/privacy-policy/" target="_blank">プライバシーポリシー</a></li>
+										<li class="footer__item"><a href="https://manebi.co.jp/" target="_blank">運営会社</a></li>
+								</ul>
+								<p class="footer__copyright">© 2020 manebi inc. All rights reserved.</p>
+						</footer> -->
+				</div>
+		</main>
+		<script>
+				const submitForm = document.getElementById('submitForm');const submitButton = document.getElementById('submitButton');submitForm.addEventListener('submit', function() {submitButton.classList.add('btn--disabled');submitButton.disabled = true;});
+		</script>
+</body>
+</html>

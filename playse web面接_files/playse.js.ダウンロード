@@ -1,0 +1,276 @@
+/**
+ * playse.js v0.1
+ *
+ */
+const Playse = {
+	init: function() {
+		document.body.addEventListener('mousedown', e => {
+			document.body.classList.remove('keyboard');
+		}, false);
+		
+		document.body.addEventListener('keydown', e => {
+			document.body.classList.add('keyboard');
+		}, false);
+		
+		const toggleFilter = document.getElementById('toggleFilter');
+		
+		if (toggleFilter != null) {
+			toggleFilter.addEventListener('click', e => {
+				e.preventDefault();
+				const filter = document.getElementById('filter');
+				if (filter.classList.contains('filter--active')) {
+					filter.classList.remove('filter--active');
+					Cookies.set('filter', '0');
+				} else {
+					filter.classList.add('filter--active');
+					Cookies.set('filter', '1');
+				}
+			}, false);
+		}
+		
+		const toggleSidebar = document.getElementById('toggleSidebar');
+		
+		if (toggleSidebar != null) {
+			toggleSidebar.addEventListener('click', e => {
+				e.preventDefault();
+				const container = document.getElementById('container');
+				const sidebarNavItems = document.getElementById('sidebarNavItems');
+				
+				if (container.classList.contains('container--folding')) {
+					container.classList.remove('container--folding');
+					Cookies.set('folding', '0');
+				} else {
+					container.classList.add('container--folding');
+					sidebarNavItems.classList.remove('sidebar__nav__item--active');
+					Cookies.set('folding', '1');
+				}
+			}, false);
+		}
+		
+		const toggleSetting = document.getElementById('toggleSetting');
+		
+		if (toggleSetting != null) {
+			toggleSetting.addEventListener('click', e => {
+				e.preventDefault();
+				const container = document.getElementById('container');
+				const sidebarNavItem = document.querySelectorAll('.sidebar__nav__item');
+				
+				sidebarNavItem.forEach(el => {
+					if (el.classList.contains('sidebar__nav__item--active')) {
+						el.classList.remove('sidebar__nav__item--active');
+					} else {
+						el.classList.add('sidebar__nav__item--active');
+						container.classList.remove('container--folding');
+						Cookies.set('folding', '0');
+					}
+				});
+			}, false);
+		}
+		
+		const uploadImage = document.getElementById('uploadImage');
+		const previewImage = document.getElementById('previewImage');
+		
+		if (uploadImage != null) {
+			uploadImage.addEventListener('change', (e) => {
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					previewImage.src = e.target.result;
+				}
+				reader.readAsDataURL(e.target.files[0]);
+			});
+		}
+		
+		const dropdown = Array.from(document.getElementsByClassName('btn--dropdown'));
+		const dropdownList = Array.from(document.getElementsByClassName('dropdown'));
+		
+		if (dropdown != null) {
+			dropdown.forEach(function(el) {
+				el.addEventListener('click', function(e) {
+					dropdownList.forEach(function(elm) {
+						elm.classList.remove('dropdown--active');
+					});
+					
+					const parent = e.target.closest('.dropdown');
+					if (parent.classList.contains('dropdown--active')) {
+						parent.classList.remove('dropdown--active');
+					} else {
+						parent.classList.add('dropdown--active');
+					}
+				}, false);
+			});
+			
+			document.addEventListener('click', function(e) {
+				if (e.target.closest('.dropdown') === null) {
+					dropdownList.forEach(function(el) {
+						el.classList.remove('dropdown--active');
+					});
+				}
+			});
+		}
+		
+		document.querySelectorAll('[data-role="invite-interview"]').forEach(el => {
+			el.addEventListener('click', function(e) {
+				Playse.Invite.interview(e);
+			});
+		});
+		
+		document.querySelectorAll('[data-role="invite-survey"]').forEach(el => {
+			el.addEventListener('click', function(e) {
+				Playse.Invite.survey(e);
+			});
+		});
+		
+		document.querySelectorAll('[data-role="toggle-flag"').forEach(el => {
+			el.addEventListener('click', e => {
+				Playse.UI.toggleFlag(el);
+			}, false);
+		});
+		
+		document.querySelectorAll('[data-role="copy"]').forEach(el => {
+			el.addEventListener('click', e => {
+				Playse.UI.copy(el.getAttribute('data-value'));
+				e.preventDefault();
+			}, false);
+		});
+	}
+}
+
+Playse.UI = {
+	copy: function(value) {
+		const textarea = document.createElement('textarea');
+		textarea.value = value;
+		document.body.appendChild(textarea);
+		textarea.select();
+		document.execCommand('copy');
+		document.body.removeChild(textarea);
+		Playse.Notification.result('クリップボードにコピーしました');
+	}, 
+	toggleFlag: async function(el) {
+		const applicant_id = el.getAttribute('data-id');
+		await fetch('/manage/api/toggleFlag', {method: 'POST', body: new URLSearchParams(`applicant_id=${applicant_id}`)})
+		.then(res => res.json())
+		.then(res => {
+			if (el.classList.contains('btn--active')) {
+				el.classList.remove('btn--active');
+			} else {
+				el.classList.add('btn--active');
+			}
+		});
+	}, 
+	confirm: function(message, callback) {
+		if (document.getElementById('confirmModal') != null) {
+			document.getElementById('confirmModal').remove();
+		}
+		
+		const overlay = document.getElementById('overlay');
+		const html = `<div id="confirmModal" class="modal modal--confirm modal--downup modal--active">
+<div class="modal__content">
+	<p class="text text--center">${message}</p>
+</div>
+<div class="modal__footer">
+	<div class="actions actions--center">
+	<ul class="actions__items">
+		<li class="actions__item"><button id="cancelButton" class="btn btn--text">いいえ</button></li>
+		<li class="actions__item"><button id="acceptButton" class="btn">はい</button></li>
+	</ul>
+</div>
+</div>`;
+		overlay.style.display = 'block';
+		document.body.insertAdjacentHTML('beforeend', html);
+		
+		const confirmModal = document.getElementById('confirmModal');
+		const cancelButton = document.getElementById('cancelButton');
+		const acceptButton = document.getElementById('acceptButton');
+		
+		document.body.addEventListener('keydown', e => {
+			if (e.keyCode == 27) {
+				overlay.style.display = 'none';
+				confirmModal.classList.remove('modal--active');
+				callback(false);
+			}
+		}, false);
+		
+		overlay.addEventListener('click', e => {
+			overlay.style.display = 'none';
+			confirmModal.classList.remove('modal--active');
+			callback(false);
+		}, false);
+		
+		cancelButton.addEventListener('click', function(e) {
+			overlay.style.display = 'none';
+			confirmModal.classList.remove('modal--active');
+			callback(false);
+		}, false);
+		
+		acceptButton.addEventListener('click', function(e) {
+			overlay.style.display = 'none';
+			confirmModal.classList.remove('modal--active');
+			callback(true);
+		}, false);
+		
+		return false;
+	}
+}
+
+Playse.Notification = {
+	remove: function() {
+		if (document.getElementById('notification') != null) {
+			document.getElementById('notification').remove();
+		}
+	}, 
+	progress: function(message, className = null) {
+		Playse.Notification.remove();
+		
+		let html = `<div id="notification" class="notification"><div id="notificationText" class="notification__text">${message}</div></div>`;
+		
+		if (className != null) {
+			html = `<div id="notification" class="notification ${className}"><div id="notificationText" class="notification__text">${message}</div></div>`;
+		}
+		
+		document.body.insertAdjacentHTML('beforeend', html);
+		
+		const notification = document.getElementById('notification');
+		notification.classList.add('fadeIn');
+	}, 
+	result: function(message) {
+		Playse.Notification.remove();
+		
+		const html = `<div id="notification" class="notification"><div class="notification__text">${message}</div><div class="notification__action"></div></div>`;
+		document.body.insertAdjacentHTML('beforeend', html);
+		
+		const notification = document.getElementById('notification');
+		
+		notification.classList.add('fadeIn');
+		
+		document.querySelectorAll('.notification__action').forEach((item) => {
+			item.addEventListener('click', () => {
+				notification.remove();
+			});
+		});
+		
+		document.body.addEventListener('keydown', e => {
+			if (e.keyCode == 27) {
+				notification.remove();
+			}
+		}, false);
+		
+		setTimeout(() => {
+			if (notification != null) {
+				notification.remove();
+			}
+		}, 3000);
+	}
+}
+
+/**
+ * smooth scroll polyfill
+ */
+!function(){"use strict";function o(){var o=window,t=document;if(!("scrollBehavior"in t.documentElement.style&&!0!==o.__forceSmoothScrollPolyfill__)){var l,e=o.HTMLElement||o.Element,r=468,i={scroll:o.scroll||o.scrollTo,scrollBy:o.scrollBy,elementScroll:e.prototype.scroll||n,scrollIntoView:e.prototype.scrollIntoView},s=o.performance&&o.performance.now?o.performance.now.bind(o.performance):Date.now,c=(l=o.navigator.userAgent,new RegExp(["MSIE ","Trident/","Edge/"].join("|")).test(l)?1:0);o.scroll=o.scrollTo=function(){void 0!==arguments[0]&&(!0!==f(arguments[0])?h.call(o,t.body,void 0!==arguments[0].left?~~arguments[0].left:o.scrollX||o.pageXOffset,void 0!==arguments[0].top?~~arguments[0].top:o.scrollY||o.pageYOffset):i.scroll.call(o,void 0!==arguments[0].left?arguments[0].left:"object"!=typeof arguments[0]?arguments[0]:o.scrollX||o.pageXOffset,void 0!==arguments[0].top?arguments[0].top:void 0!==arguments[1]?arguments[1]:o.scrollY||o.pageYOffset))},o.scrollBy=function(){void 0!==arguments[0]&&(f(arguments[0])?i.scrollBy.call(o,void 0!==arguments[0].left?arguments[0].left:"object"!=typeof arguments[0]?arguments[0]:0,void 0!==arguments[0].top?arguments[0].top:void 0!==arguments[1]?arguments[1]:0):h.call(o,t.body,~~arguments[0].left+(o.scrollX||o.pageXOffset),~~arguments[0].top+(o.scrollY||o.pageYOffset)))},e.prototype.scroll=e.prototype.scrollTo=function(){if(void 0!==arguments[0])if(!0!==f(arguments[0])){var o=arguments[0].left,t=arguments[0].top;h.call(this,this,void 0===o?this.scrollLeft:~~o,void 0===t?this.scrollTop:~~t)}else{if("number"==typeof arguments[0]&&void 0===arguments[1])throw new SyntaxError("Value could not be converted");i.elementScroll.call(this,void 0!==arguments[0].left?~~arguments[0].left:"object"!=typeof arguments[0]?~~arguments[0]:this.scrollLeft,void 0!==arguments[0].top?~~arguments[0].top:void 0!==arguments[1]?~~arguments[1]:this.scrollTop)}},e.prototype.scrollBy=function(){void 0!==arguments[0]&&(!0!==f(arguments[0])?this.scroll({left:~~arguments[0].left+this.scrollLeft,top:~~arguments[0].top+this.scrollTop,behavior:arguments[0].behavior}):i.elementScroll.call(this,void 0!==arguments[0].left?~~arguments[0].left+this.scrollLeft:~~arguments[0]+this.scrollLeft,void 0!==arguments[0].top?~~arguments[0].top+this.scrollTop:~~arguments[1]+this.scrollTop))},e.prototype.scrollIntoView=function(){if(!0!==f(arguments[0])){var l=function(o){for(;o!==t.body&&!1===(e=p(l=o,"Y")&&a(l,"Y"),r=p(l,"X")&&a(l,"X"),e||r);)o=o.parentNode||o.host;var l,e,r;return o}(this),e=l.getBoundingClientRect(),r=this.getBoundingClientRect();l!==t.body?(h.call(this,l,l.scrollLeft+r.left-e.left,l.scrollTop+r.top-e.top),"fixed"!==o.getComputedStyle(l).position&&o.scrollBy({left:e.left,top:e.top,behavior:"smooth"})):o.scrollBy({left:r.left,top:r.top,behavior:"smooth"})}else i.scrollIntoView.call(this,void 0===arguments[0]||arguments[0])}}function n(o,t){this.scrollLeft=o,this.scrollTop=t}function f(o){if(null===o||"object"!=typeof o||void 0===o.behavior||"auto"===o.behavior||"instant"===o.behavior)return!0;if("object"==typeof o&&"smooth"===o.behavior)return!1;throw new TypeError("behavior member of ScrollOptions "+o.behavior+" is not a valid value for enumeration ScrollBehavior.")}function p(o,t){return"Y"===t?o.clientHeight+c<o.scrollHeight:"X"===t?o.clientWidth+c<o.scrollWidth:void 0}function a(t,l){var e=o.getComputedStyle(t,null)["overflow"+l];return"auto"===e||"scroll"===e}function d(t){var l,e,i,c,n=(s()-t.startTime)/r;c=n=n>1?1:n,l=.5*(1-Math.cos(Math.PI*c)),e=t.startX+(t.x-t.startX)*l,i=t.startY+(t.y-t.startY)*l,t.method.call(t.scrollable,e,i),e===t.x&&i===t.y||o.requestAnimationFrame(d.bind(o,t))}function h(l,e,r){var c,f,p,a,h=s();l===t.body?(c=o,f=o.scrollX||o.pageXOffset,p=o.scrollY||o.pageYOffset,a=i.scroll):(c=l,f=l.scrollLeft,p=l.scrollTop,a=n),d({scrollable:c,method:a,startTime:h,startX:f,startY:p,x:e,y:r})}}"object"==typeof exports&&"undefined"!=typeof module?module.exports={polyfill:o}:o()}();
+
+/**
+ * Minified by jsDelivr using Terser v3.14.1.
+ * Original file: /npm/js-cookie@2.2.0/src/js.cookie.js
+ * 
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+!function(e){var n=!1;if("function"==typeof define&&define.amd&&(define(e),n=!0),"object"==typeof exports&&(module.exports=e(),n=!0),!n){var o=window.Cookies,t=window.Cookies=e();t.noConflict=function(){return window.Cookies=o,t}}}(function(){function e(){for(var e=0,n={};e<arguments.length;e++){var o=arguments[e];for(var t in o)n[t]=o[t]}return n}return function n(o){function t(n,r,i){var c;if("undefined"!=typeof document){if(arguments.length>1){if("number"==typeof(i=e({path:"/"},t.defaults,i)).expires){var a=new Date;a.setMilliseconds(a.getMilliseconds()+864e5*i.expires),i.expires=a}i.expires=i.expires?i.expires.toUTCString():"";try{c=JSON.stringify(r),/^[\{\[]/.test(c)&&(r=c)}catch(e){}r=o.write?o.write(r,n):encodeURIComponent(String(r)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g,decodeURIComponent),n=(n=(n=encodeURIComponent(String(n))).replace(/%(23|24|26|2B|5E|60|7C)/g,decodeURIComponent)).replace(/[\(\)]/g,escape);var s="";for(var f in i)i[f]&&(s+="; "+f,!0!==i[f]&&(s+="="+i[f]));return document.cookie=n+"="+r+s}n||(c={});for(var p=document.cookie?document.cookie.split("; "):[],d=/(%[0-9A-Z]{2})+/g,u=0;u<p.length;u++){var l=p[u].split("="),C=l.slice(1).join("=");this.json||'"'!==C.charAt(0)||(C=C.slice(1,-1));try{var g=l[0].replace(d,decodeURIComponent);if(C=o.read?o.read(C,g):o(C,g)||C.replace(d,decodeURIComponent),this.json)try{C=JSON.parse(C)}catch(e){}if(n===g){c=C;break}n||(c[g]=C)}catch(e){}}return c}}return t.set=t,t.get=function(e){return t.call(t,e)},t.getJSON=function(){return t.apply({json:!0},[].slice.call(arguments))},t.defaults={},t.remove=function(n,o){t(n,"",e(o,{expires:-1}))},t.withConverter=n,t}(function(){})});

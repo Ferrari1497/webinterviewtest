@@ -1,0 +1,177 @@
+if (typeof Playse === 'undefined') {
+	Playse = {};
+}
+
+Playse.Invite = {
+	survey: async (e) => {
+		e.preventDefault();
+		
+		if (document.getElementById('inviteModal') != null) {
+			document.getElementById('inviteModal').remove();
+		}
+		
+		const survey_id = e.target.getAttribute('data-survey-id');
+		const applicant_id = e.target.getAttribute('data-applicant-id');
+		
+		await fetch('/manage/api/inviteSurvey', {method: 'POST', body: new URLSearchParams(`survey_id=${survey_id}&applicant_id=${applicant_id}`)})
+		.then(res => res.json())
+		.then(res => {
+			const mailto   = 'mailto:' + res.to + '?subject=' + encodeURIComponent(res.subject) + '&body=' + encodeURIComponent(res.body);
+			const lineurl  = res.url;
+			const copytext = res.body;
+			const copyurl  = res.url;
+			const html = `<div id="inviteModal" class="modal modal--invite">
+<div class="modal__header">ヒアリングシートの記入依頼<a href="#" class="modal__header__close" data-role="modal-close" aria-label="閉じる"></a></div>
+<div class="modal__content">
+<div class="invitation">
+<ul class="invitation__items mb--36">
+<li class="invitation__item"><a href="${mailto}"><i class="icon icon-email"></i>メール</a></li>
+<li class="invitation__item"><a href="https://social-plugins.line.me/lineit/share?url=${copyurl}" target="_blank"><i class="icon icon-line"></i>LINE</a></li>
+<li class="invitation__item"><a href="#" data-role="copy" data-value="${copytext}"><i class="icon icon-copy"></i>コピー</a></li>
+<li class="invitation__item"><a href="#" data-role="copy" data-value="${copyurl}"><i class="icon icon-clipboard"></i>URL</a></li>
+</ul>
+<p class="invitation__note">※メール：設定されているメールアプリの新規作成画面が開きます。<br>
+※Line：Lineにログインしてメッセージを送信できます。<br>
+※コピー：クリップボードにコピーされます。ご利用のメールアプリなどに貼り付け（ペースト）することができます。<br>
+※URL：クリップボードにURLがコピーされます。</p>
+</div></div></div>`;
+			document.body.insertAdjacentHTML('beforeend', html);
+			
+			const overlay = document.getElementById('overlay');
+			const inviteModal = document.getElementById('inviteModal');
+			
+			overlay.style.display = 'block';
+			inviteModal.classList.add('modal--downup');
+			inviteModal.classList.add('modal--active');
+			
+			document.body.addEventListener('keydown', e => {
+				if (e.keyCode == 27) {
+					overlay.style.display = 'none';
+					inviteModal.classList.remove('modal--active');
+				}
+			}, false);
+			
+			document.querySelectorAll('[data-role="modal-close"]').forEach(el => {
+				el.addEventListener('click', function(e) {
+					e.preventDefault();
+					overlay.style.display = 'none';
+					inviteModal.classList.remove('modal--active');
+				}, false);
+			});
+			
+			overlay.addEventListener('click', e => {
+				overlay.style.display = 'none';
+				inviteModal.classList.remove('modal--active');
+			}, false);
+			
+			document.querySelectorAll('[data-role="copy"]').forEach(el => {
+				el.addEventListener('click', e => {
+					e.preventDefault();
+					Playse.UI.copy(el.getAttribute('data-value'));
+				}, false);
+			});
+		});
+	}, 
+	interview: async (e) => {
+		e.preventDefault();
+		
+		if (document.getElementById('inviteModal') != null) {
+			document.getElementById('inviteModal').remove();
+		}
+		
+		const interview_id = e.target.getAttribute('data-interview-id');
+		await fetch('/manage/api/inviteInterview', {method: 'POST', body: new URLSearchParams(`interview_id=${interview_id}`)})
+		.then(res => res.json())
+		.then(res => {
+			const copytext = res.body;
+			let html;
+			let mailto;
+			
+			if (res.to == '') {
+				mailto = 'mailto:?subject=' + encodeURIComponent(res.subject) + '&body=' + encodeURIComponent(res.body);
+			} else {
+				mailto = 'mailto:' + res.to + '?subject=' + encodeURIComponent(res.subject) + '&body=' + encodeURIComponent(res.body);
+			}
+			if (res.url == '') {
+				html = `<div id="inviteModal" class="modal modal--invite">
+<div class="modal__header">面接日時のお知らせ<a href="#" class="modal__header__close" data-role="modal-close" aria-label="閉じる"></a></div>
+<div class="modal__content"><div class="invitation"><ul class="invitation__items mb--36">
+<li class="invitation__item"><a href="${mailto}"><i class="icon icon-email"></i>メール</a></li>
+<li class="invitation__item"><a href="#" data-role="copy" data-value="${copytext}"><i class="icon icon-copy"></i>コピー</a></li></ul>
+<p class="invitation__note">※メール：設定されているメールアプリの新規作成画面が開きます。<br>
+※コピー：クリップボードにコピーされます。ご利用のメールアプリなどに貼り付け（ペースト）することができます。</p>
+</div></div></div>`;
+				
+			} else {
+				const copyurl = res.url;
+				const roomurl = res.room_url;
+				html = `<div id="inviteModal" class="modal modal--invite">
+<div class="modal__header">面接日時のお知らせ<a href="#" class="modal__header__close" data-role="modal-close" aria-label="閉じる"></a></div>
+<div class="modal__content">
+	<div class="invitation">
+		<ul class="invitation__items mb--24">
+			<li class="invitation__item"><a href="${mailto}"><i class="icon icon-email"></i>メール</a></li>
+			<li class="invitation__item"><a href="https://social-plugins.line.me/lineit/share?url=${copyurl}" target="_blank"><i class="icon icon-line"></i>LINE</a></li>
+			<li class="invitation__item"><a href="#" data-role="copy" data-value="${copytext}"><i class="icon icon-copy"></i>コピー</a></li>
+		</ul>
+		<dl class="invitation__dl mb--12">
+			<dt class="invitation__dt">応募者専用URL：</dt>
+			<dd class="invitation__dd"><input type="text" class="input" value="${copyurl}" readonly="readonly"></dd>
+			<dd class="invitation__dd"><a href="#" data-role="copy" data-value="${copyurl}" class="btn btn--icon-only" aria-label="応募者専用URLをコピー"><i class="icon icon-clipboard"></i></a></dd>
+		</dl>
+		<dl class="invitation__dl mb--24">
+			<dt class="invitation__dt">面接ルームURL：</dt>
+			<dd class="invitation__dd"><input type="text" class="input" value="${roomurl}" readonly="readonly"></dd>
+			<dd class="invitation__dd"><a href="#" data-role="copy" data-value="${roomurl}" class="btn btn--icon-only" aria-label="面接ルームURLをコピー"><i class="icon icon-clipboard"></i></a></dd>
+		</dl>
+		<p class="invitation__note">※メール：設定されているメールアプリの新規作成画面が開きます。<br>
+		※Line：Lineにログインしてメッセージを送信できます。<br>
+		※コピー：クリップボードにコピーされます。ご利用のメールアプリなどに貼り付けることができます。</p>
+	</div>
+</div></div>`;
+			}
+			
+			document.body.insertAdjacentHTML('beforeend', html);
+			
+			const overlay = document.getElementById('overlay');
+			const inviteModal = document.getElementById('inviteModal');
+			
+			overlay.style.display = 'block';
+			inviteModal.classList.add('modal--downup');
+			inviteModal.classList.add('modal--active');
+			
+			document.querySelectorAll('.input').forEach(el => {
+				el.addEventListener('focus', function(e) {
+					el.select();
+				}, false);
+			});
+			
+			document.body.addEventListener('keydown', e => {
+				if (e.keyCode == 27) {
+					overlay.style.display = 'none';
+					inviteModal.classList.remove('modal--active');
+				}
+			}, false);
+			
+			document.querySelectorAll('[data-role="modal-close"]').forEach(el => {
+				el.addEventListener('click', function(e) {
+					e.preventDefault();
+					overlay.style.display = 'none';
+					inviteModal.classList.remove('modal--active');
+				}, false);
+			});
+			
+			overlay.addEventListener('click', e => {
+				overlay.style.display = 'none';
+				inviteModal.classList.remove('modal--active');
+			}, false);
+			
+			document.querySelectorAll('[data-role="copy"]').forEach(el => {
+				el.addEventListener('click', e => {
+					e.preventDefault();
+					Playse.UI.copy(el.getAttribute('data-value'));
+				}, false);
+			});
+		});
+	}
+}
